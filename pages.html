@@ -1,0 +1,228 @@
+<!DOCTYPE>
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Display Page</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="css/mdb.min.css" rel="stylesheet">
+    <!-- Your custom styles (optional) -->
+    <link href="css/style.css" rel="stylesheet">
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript" src="js/popper.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="js/mdb.min.js"></script>
+</head>
+
+<body onload="render()">
+<div class="container">
+    <div class="con">
+        <div class="container" id="conta">
+            <div id="my"></div>
+        </div>
+        <br>
+        <div style="float: right;"><p onclick="ResetActivity(1,2);">Reset This Activity</p></div>
+        <!-- <div style="float: right;"><p onclick="Reset();">Reset This Activity</p></div> -->
+    </div>
+</div>
+
+    
+   
+<script type="text/javascript">
+    function closehint(a) {
+        var z="#"+a+"hinted";
+        $(z).hide();
+    }
+    function err(a) {
+        var q="#"+a+"hint";
+        var z="#"+a+"hinted";
+        var x=a+"hint";
+        var v=parseInt($(q).attr('name'));
+        if (v%2 ==0) {$(z).hide();} else {$(z).show();}
+        var p=v+1;
+        $(q).attr("name",p);
+    }
+    function error(a) {
+        var radios = document.getElementsByName(a);
+        var value;
+        for (var i = 0; i < radios.length; i++) {
+            if (radios[i].type === 'radio' && radios[i].checked) {
+             value = radios[i].value;      
+            }
+        }
+        var z="#"+a+value;
+        if (value=="correct") {
+            var p="#"+a+"incorrect";
+            $(p).hide();
+        }
+        else
+        {
+         var p="#"+a+"correct";
+            $(p).hide();   
+        }
+        
+        $(z).show();
+    }
+</script>
+
+<script type="text/javascript">
+    function correct(a) {
+        var z="#"+a+"correct";
+        $(z).hide();
+    }
+    function incorrect(a) {
+        var z="#"+a+"incorrect";
+        $(z).hide();
+    }
+</script>
+
+<script>
+var slideIndex = 1;
+// showdivs(slideIndex,1);
+// showdivs(slideIndex,2);
+
+function plusdivs(n,id) {
+    var z=id+"mySlides";
+    var x=document.getElementsByName(z);
+    for (var i =0;i<x.length;i++) {
+    if(x[i].className=='active')
+     {
+        slideIndex=i+1;
+        x[i].className = x[i].className.replace(" active", "");
+     }
+    }
+    slideIndex += n;
+  showdivs(slideIndex,id);
+}
+
+function showdivs(n,id) {
+    console.log(n," nnnnnnn ",id);
+  var i;
+  var z=id+"mySlides";
+  var prev="#"+id+"prev";
+  var next="#"+id+"next";
+  var x = document.getElementsByName(z);
+  if (n<=1) 
+  {
+    $(next).show();
+    $(prev).hide();
+    slideIndex=1;
+}
+  else if(n>=x.length)
+  {
+    $(next).hide();
+    $(prev).show();
+    slideIndex=x.length;
+  }
+  else
+  {
+    $(prev).show();
+    $(next).show();
+  }
+  for (i = 0; i < x.length; i++) {
+     x[i].style.display = "none"; 
+  }
+  x[slideIndex-1].style.display = "block"; 
+  x[slideIndex-1].className+=" active"; 
+}
+
+</script>
+
+<script type="text/javascript">
+    var jsondata='{"questions":[{"question":"Each computer has a built-in instruction set that it knows how to execute by design.","hint":"Recall that we use the term computation to mean “the execution of a sequence of instructions by a computer with the intention of solving a given problem”.A computer should know how to perform certain basic instructions for it to be able to do any computation at all.","options":["=True","~False"],"id":"1","correct":"Correct. This set typically includes simple instructions for doing arithmetic and logic operations, moving data between the processing and storage units, and for determining which instruction is to be executed next.","incorrect":"Incorrect. Each computer has a set of primitive instructions that it is “wired” to execute. We call this the instruction set of the computer."},{"question":"The computer uses intelligence to execute instructions.","hint":"Recall that we said a computer executes the instructions given to it mechanically.Mechanical computation means, automated computation without any thought.","options":["~True","=False"],"id":"2","correct":"Correct. A computer executes instructions automatically. Its main task is to simply execute the instructions given to it (from its instruction set) and remember their results as the computation goes on. The part that may require intelligence is expressing a computation in terms of those instructions.","incorrect":"Incorrect. A computer executes instructions automatically. Its main task is to simply execute the instructions given to it (from its instruction set) and remember their results as the computation goes on. The part that may require intelligence is expressing a computation in terms of those instructions."}]}';
+    var json=JSON.parse(jsondata);
+    console.log(json);
+</script>
+
+<script type="text/javascript">
+    var data="";
+   function render() {
+        var questions=json.questions;
+        // var data="";
+        for (var i = 0; i < questions.length; i++) {
+            data+='<div id="question">';
+            data+='<p>'+questions[i].question+'</p>';
+            data+='<b name="1" onclick="err('+questions[i].id+'); return false;" id="'+questions[i].id+'hint" class="hints">hint</b><br>';
+            data+='<div class="hint" id="'+questions[i].id+'hinted" style="display:none;">';
+            data+='<div class="close" onclick="closehint('+questions[i].id+'); return false;">x</div>';
+            data+='<div class="row">';
+            data+='<div style="display: none;" id="'+questions[i].id+'prev" class="prev "><img src="img/prev.png" width="20" height="20" onclick="plusdivs(-1,'+questions[i].id+')" alt="previous" class="img-fluid"></div>';
+
+            data+='<div class="col-md-10 col-sm-10 col-xs-10 Slides">';
+            var hintarray=questions[i].hint.split(".");
+            data+='<div name="'+questions[i].id+'mySlides" class="active">'+hintarray[0]+'.</div>';
+            for (var j = 1; j < hintarray.length-1; j++) {
+                data+='<div name="'+questions[i].id+'mySlides" style="display:none;"  class="">'+hintarray[j]+'.</div>';
+            }
+            data+='</div>';
+
+            data+='<div id="'+questions[i].id+'next" class="next "><img src="img/next.png" width="20" height="20" onclick="plusdivs(+1,'+questions[i].id+')" alt="next" class="img-fluid float-right"></div>';
+
+            data+='</div>';
+            data+='</div>';
+
+            data+='<div>';
+            var options=questions[i].options;
+            for (var k = 0; k < options.length; k++) {
+                var option=options[k].substr(1);
+                var opt=options[k].substr(0,1);
+                if (opt=='=') {
+                    data+='<input type="radio" name="'+questions[i].id+'" value="correct" onclick="error('+questions[i].id+');" >'+option+'<br>';
+                }
+                else
+                {
+                    data+='<input type="radio" name="'+questions[i].id+'" value="incorrect" onclick="error('+questions[i].id+');" >'+option+'<br>';   
+                }
+
+            }
+            data+='</div>';
+            data+='<div class="correct" id="'+questions[i].id+'correct" style="display: none;"><div class="close" onclick="correct('+questions[i].id+');">x</div><div class="row">';
+            data+='<div class="icon"><img src="img/right.png" width="20" height="20"></div>';
+            data+='<div class="col-md-10 col-sm-10">'+questions[i].correct+'</div>';
+            data+='</div></div>';
+
+            data+='<div class="incorrect" id="'+questions[i].id+'incorrect" style="display: none;"><div class="close" onclick="incorrect('+questions[i].id+'); return false;">x</div><div class="row">';
+            data+='<div class="icon"><img src="img/wrong.png" width="20" height="20"></div>';
+            data+='<div class="col-md-10 col-sm-10">'+questions[i].incorrect+'</div>';
+            data+='</div></div>';
+
+            data+='</div><hr>';
+        }
+        document.getElementById('my').innerHTML += data;
+    } 
+
+    // function Reset() {
+    //     console.log(data," ooooooo ");
+    //     $("#my").replaceWith(data);
+    // }
+</script>
+<script type="text/javascript">
+    function ResetRadio(a) {
+        var radios = document.getElementsByName(a);
+        for (var i = 0; i < radios.length; i++) {
+            if (radios[i].type === 'radio' && radios[i].checked) {
+             radios[i].checked=false;      
+            }
+        }
+    }
+    function ResetActivity(a,b) {
+        for (var i = a; i <=b; i++) {
+            ResetRadio(i);
+            correct(i);
+            incorrect(i);
+            closehint(i);
+        }
+    }
+</script>
+
+</body>
+</html>
+0
